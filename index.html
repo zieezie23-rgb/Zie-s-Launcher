@@ -13,7 +13,7 @@
 <body>
   <header class="topbar">
     <div class="brand">
-      <div class="logo">ZIE</div>
+      <a class="logo" href="https://github.com/zieezie23-rgb/Zie-s-Launcher" target="_blank" rel="noopener"><img src="assets/icon.png" alt="ZIE Project"></a>
       <div><strong>project</strong><span>PWA LAUNCHER</span></div>
     </div>
     <div class="topbar-actions">
@@ -53,6 +53,7 @@
       <label>Nama<input id="name" required maxlength="60" placeholder="Contoh: Finance"></label>
       <label>URL PWA<input id="url" type="url" required placeholder="https://example.com"></label>
       <label>Kategori<input id="cat" maxlength="30" placeholder="Tools"></label>
+      <label>URL Repo<input id="repo" type="url" placeholder="https://github.com/user/repo"></label>
       <label class="check"><input id="favorite" type="checkbox"> Jadikan favorit</label>
       <div class="form-actions">
         <button type="button" id="deleteBtn" class="danger" hidden>Hapus</button>
@@ -68,7 +69,13 @@
         <div class="card-body"><h3></h3><p></p></div>
       </div>
       <button class="fav" title="Favorite">☆</button>
-      <button class="edit" title="Edit">•••</button>
+      <div class="menu-wrap">
+        <button class="menu-toggle" title="Menu">•••</button>
+        <div class="menu">
+          <button class="menu-edit" type="button">Edit</button>
+          <button class="menu-repo" type="button">URL Repo</button>
+        </div>
+      </div>
     </article>
   </template>
 

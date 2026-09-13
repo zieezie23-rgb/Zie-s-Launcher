@@ -1,7 +1,7 @@
 const KEY="zie-project-apps-v1";
 const BACKUP_URL="https://script.google.com/macros/s/AKfycbx0bQ2L2YYaflVztXf6BSRoQDQPsNLp6m_bHYaDg5bnwiFyOlCfnIusoBocfzYmVpvvYg/exec";
 const seed=[
- {id:crypto.randomUUID(),name:"ZIE Project",url:"https://example.com",cat:"Tools",icon:"",favorite:true}
+ {id:crypto.randomUUID(),name:"ZIE Project",url:"https://example.com",cat:"Tools",repo:"https://github.com/zieezie23-rgb/Zie-s-Launcher",icon:"",favorite:true}
 ];
 const hasLocalData=localStorage.getItem(KEY)!==null;
 let apps=JSON.parse(localStorage.getItem(KEY)||"null")||seed;
@@ -24,6 +24,7 @@ async function loadFromCloud(silent){
     name:x.name||"",
     url:x.url||"",
     cat:x.cat||"Lainnya",
+    repo:x.repo||"",
     icon:iconFromUrl(x.url||""),
     favorite:!!x.favorite
    }));
@@ -46,9 +47,15 @@ function buildCard(x){
  if(x.icon){const im=new Image();im.src=x.icon;im.onerror=()=>icon.textContent=x.name[0].toUpperCase();icon.append(im)}else icon.textContent=x.name[0].toUpperCase();
  el.querySelector("h3").textContent=x.name; el.querySelector("p").textContent=x.cat||"Lainnya"; icon.href=x.url;
  const fav=el.querySelector(".fav");fav.textContent=x.favorite?"★":"☆";fav.classList.toggle("on",x.favorite);
- fav.onclick=()=>{x.favorite=!x.favorite;save()}; el.querySelector(".edit").onclick=()=>openForm(x);
+ fav.onclick=()=>{x.favorite=!x.favorite;save()};
+ const menu=el.querySelector(".menu");
+ el.querySelector(".menu-toggle").onclick=(e)=>{e.stopPropagation();const open=menu.classList.contains("show");closeAllMenus();if(!open)menu.classList.add("show")};
+ el.querySelector(".menu-edit").onclick=()=>{closeAllMenus();openForm(x)};
+ el.querySelector(".menu-repo").onclick=()=>{closeAllMenus();if(x.repo)window.open(x.repo,"_blank");else alert("URL repo belum diisi untuk aplikasi ini.")};
  return card;
 }
+function closeAllMenus(){document.querySelectorAll(".menu.show").forEach(m=>m.classList.remove("show"))}
+document.addEventListener("click",closeAllMenus);
 function renderByCategory(list){
  const groups={};
  list.forEach(x=>{const c=x.cat||"Lainnya";(groups[c]=groups[c]||[]).push(x)});
@@ -79,16 +86,16 @@ function iconFromUrl(url){
 }
 function openForm(x=null){
  $("#dialogTitle").textContent=x?"Edit aplikasi":"Tambah aplikasi"; $("#appId").value=x?.id||"";
- $("#name").value=x?.name||"";$("#url").value=x?.url||"";$("#cat").value=x?.cat||"";$("#favorite").checked=!!x?.favorite;$("#deleteBtn").hidden=!x;
+ $("#name").value=x?.name||"";$("#url").value=x?.url||"";$("#cat").value=x?.cat||"";$("#repo").value=x?.repo||"";$("#favorite").checked=!!x?.favorite;$("#deleteBtn").hidden=!x;
  dialog.showModal(); $("#name").focus()
 }
 $("#addBtn").onclick=()=>openForm(); $("#search").oninput=render;
 $("#searchToggle").onclick=()=>{const s=$("#search");s.classList.toggle("show");if(s.classList.contains("show"))s.focus();else{s.value="";render()}};
-form.onsubmit=e=>{e.preventDefault();const url=$("#url").value.trim();const data={id:$("#appId").value||crypto.randomUUID(),name:$("#name").value.trim(),url,cat:$("#cat").value.trim()||"Lainnya",icon:iconFromUrl(url),favorite:$("#favorite").checked};
+form.onsubmit=e=>{e.preventDefault();const url=$("#url").value.trim();const data={id:$("#appId").value||crypto.randomUUID(),name:$("#name").value.trim(),url,cat:$("#cat").value.trim()||"Lainnya",repo:$("#repo").value.trim(),icon:iconFromUrl(url),favorite:$("#favorite").checked};
  const i=apps.findIndex(x=>x.id===data.id); if(i<0)apps.push(data);else apps[i]=data; save();dialog.close()};
 $("#deleteBtn").onclick=()=>{const id=$("#appId").value;if(confirm("Hapus aplikasi ini?")){apps=apps.filter(x=>x.id!==id);save();dialog.close()}};
 $("#exportBtn").onclick=()=>{
- const rows=apps.map(x=>({Nama:x.name,URL:x.url,Kategori:x.cat||"Lainnya",Favorit:x.favorite?"Ya":"Tidak"}));
+ const rows=apps.map(x=>({Nama:x.name,URL:x.url,Kategori:x.cat||"Lainnya","URL Repo":x.repo||"",Favorit:x.favorite?"Ya":"Tidak"}));
  const ws=XLSX.utils.json_to_sheet(rows);
  const wb=XLSX.utils.book_new();
  XLSX.utils.book_append_sheet(wb,ws,"Aplikasi");
