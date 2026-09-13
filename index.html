@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111">
+  <meta name="description" content="Launcher kumpulan aplikasi PWA">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/icon.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+  <title>ZIE Project</title>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">ZIE</div>
+      <div><strong>project</strong><span>PWA LAUNCHER</span></div>
+    </div>
+    <button id="installBtn" class="icon-btn" hidden>Install</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">MY APPLICATIONS</p>
+        <h1>Semua PWA,<br><em>satu tempat.</em></h1>
+      </div>
+      <button id="addBtn" class="add-btn">＋ Tambah</button>
+    </section>
+
+    <section class="toolbar">
+      <input id="search" type="search" placeholder="Cari aplikasi..." autocomplete="off">
+      <select id="category"><option value="all">Semua kategori</option></select>
+    </section>
+
+    <section id="grid" class="grid" aria-live="polite"></section>
+    <div id="empty" class="empty" hidden>
+      <div class="empty-mark">?</div>
+      <h2>Belum ada aplikasi</h2>
+      <p>Tambahkan URL PWA pertamamu.</p>
+    </div>
+  </main>
+
+  <dialog id="appDialog">
+    <form method="dialog" id="appForm">
+      <div class="dialog-head">
+        <h2 id="dialogTitle">Tambah aplikasi</h2>
+        <button value="cancel" class="close">×</button>
+      </div>
+      <input type="hidden" id="appId">
+      <label>Nama<input id="name" required maxlength="60" placeholder="Contoh: Finance"></label>
+      <label>URL PWA<input id="url" type="url" required placeholder="https://example.com"></label>
+      <label>Kategori<input id="cat" maxlength="30" placeholder="Tools"></label>
+      <label>Icon URL <span>(opsional)</span><input id="icon" type="url" placeholder="https://example.com/icon.png"></label>
+      <label class="check"><input id="favorite" type="checkbox"> Jadikan favorit</label>
+      <div class="form-actions">
+        <button type="button" id="deleteBtn" class="danger" hidden>Hapus</button>
+        <button type="submit" class="primary">Simpan</button>
+      </div>
+    </form>
+  </dialog>
+
+  <template id="cardTpl">
+    <article class="card">
+      <button class="fav" title="Favorite">☆</button>
+      <div class="app-icon"></div>
+      <div class="card-body"><h3></h3><p></p></div>
+      <a class="open" target="_blank" rel="noopener">Buka ↗</a>
+      <button class="edit" title="Edit">•••</button>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
