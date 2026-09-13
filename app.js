@@ -51,6 +51,7 @@ function openForm(x=null){
  dialog.showModal(); $("#name").focus()
 }
 $("#addBtn").onclick=()=>openForm(); $("#search").oninput=render;
+$("#searchToggle").onclick=()=>{const s=$("#search");s.classList.toggle("show");if(s.classList.contains("show"))s.focus();else{s.value="";render()}};
 form.onsubmit=e=>{e.preventDefault();const url=$("#url").value.trim();const data={id:$("#appId").value||crypto.randomUUID(),name:$("#name").value.trim(),url,cat:$("#cat").value.trim()||"Lainnya",icon:iconFromUrl(url),favorite:$("#favorite").checked};
  const i=apps.findIndex(x=>x.id===data.id); if(i<0)apps.push(data);else apps[i]=data; save();dialog.close()};
 $("#deleteBtn").onclick=()=>{const id=$("#appId").value;if(confirm("Hapus aplikasi ini?")){apps=apps.filter(x=>x.id!==id);save();dialog.close()}};
