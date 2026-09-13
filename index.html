@@ -21,7 +21,7 @@
       <button id="pullBtn" class="search-toggle" title="Tarik data dari Cloud" aria-label="Tarik data dari Cloud">⟳</button>
       <button id="exportBtn" class="search-toggle" title="Export ke Excel" aria-label="Export ke Excel">⬇</button>
       <button id="addBtn" class="add-btn" title="Tambah aplikasi" aria-label="Tambah aplikasi">＋</button>
-      <button id="searchToggle" class="search-toggle" title="Cari aplikasi" aria-label="Cari aplikasi">🔍</button>
+      <button id="searchToggle" class="search-toggle" title="Cari aplikasi" aria-label="Cari aplikasi">⌕</button>
       <input id="search" type="search" placeholder="Cari aplikasi..." autocomplete="off">
     </div>
   </header>
@@ -63,9 +63,11 @@
 
   <template id="cardTpl">
     <article class="card">
+      <div class="card-top">
+        <a class="app-icon" target="_blank" rel="noopener"></a>
+        <div class="card-body"><h3></h3><p></p></div>
+      </div>
       <button class="fav" title="Favorite">☆</button>
-      <a class="app-icon" target="_blank" rel="noopener"></a>
-      <div class="card-body"><h3></h3><p></p></div>
       <button class="edit" title="Edit">•••</button>
     </article>
   </template>

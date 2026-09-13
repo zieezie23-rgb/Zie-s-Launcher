@@ -96,7 +96,7 @@ $("#exportBtn").onclick=()=>{
  XLSX.writeFile(wb,`zie-project-apps-${tgl}.xlsx`);
 };
 let deferred;
-const isStandalone=()=>window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+const isStandalone=()=>window.matchMedia("(display-mode: standalone)").matches||window.matchMedia("(display-mode: fullscreen)").matches||navigator.standalone===true;
 if(isStandalone())$("#installBtn").hidden=true;
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();if(isStandalone())return;deferred=e;$("#installBtn").hidden=false});
 window.addEventListener("appinstalled",()=>{deferred=null;$("#installBtn").hidden=true});
