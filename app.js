@@ -95,12 +95,7 @@ form.onsubmit=e=>{e.preventDefault();const url=$("#url").value.trim();const data
  const i=apps.findIndex(x=>x.id===data.id); if(i<0)apps.push(data);else apps[i]=data; save();dialog.close()};
 $("#deleteBtn").onclick=()=>{const id=$("#appId").value;if(confirm("Hapus aplikasi ini?")){apps=apps.filter(x=>x.id!==id);save();dialog.close()}};
 $("#exportBtn").onclick=()=>{
- const rows=apps.map(x=>({Nama:x.name,URL:x.url,Kategori:x.cat||"Lainnya","URL Repo":x.repo||"",Favorit:x.favorite?"Ya":"Tidak"}));
- const ws=XLSX.utils.json_to_sheet(rows);
- const wb=XLSX.utils.book_new();
- XLSX.utils.book_append_sheet(wb,ws,"Aplikasi");
- const tgl=new Date().toISOString().slice(0,10);
- XLSX.writeFile(wb,`zie-project-apps-${tgl}.xlsx`);
+ window.open("https://docs.google.com/spreadsheets/d/1iCpeO6yS4XINtT55KXSP0JHswje--EtOprfH7JhJSeA/edit?gid=0#gid=0","_blank");
 };
 let deferred;
 const isStandalone=()=>window.matchMedia("(display-mode: standalone)").matches||window.matchMedia("(display-mode: fullscreen)").matches||navigator.standalone===true;
