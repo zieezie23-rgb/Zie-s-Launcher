@@ -98,11 +98,14 @@ $("#exportBtn").onclick=()=>{
  window.open("https://docs.google.com/spreadsheets/d/1iCpeO6yS4XINtT55KXSP0JHswje--EtOprfH7JhJSeA/edit?gid=0#gid=0","_blank");
 };
 let deferred;
+const INSTALL_KEY="zie-project-installed";
 const isStandalone=()=>window.matchMedia("(display-mode: standalone)").matches||window.matchMedia("(display-mode: fullscreen)").matches||navigator.standalone===true;
-if(isStandalone())$("#installBtn").hidden=true;
-window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();if(isStandalone())return;deferred=e;$("#installBtn").hidden=false});
-window.addEventListener("appinstalled",()=>{deferred=null;$("#installBtn").hidden=true});
-$("#installBtn").onclick=async()=>{if(!deferred)return;deferred.prompt();const r=await deferred.userChoice;if(r.outcome==="accepted")$("#installBtn").hidden=true;deferred=null};
+const isInstalled=()=>isStandalone()||localStorage.getItem(INSTALL_KEY)==="1";
+function markInstalled(){localStorage.setItem(INSTALL_KEY,"1");$("#installBtn").hidden=true}
+if(isInstalled())$("#installBtn").hidden=true;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();if(isInstalled())return;deferred=e;$("#installBtn").hidden=false});
+window.addEventListener("appinstalled",()=>{deferred=null;markInstalled()});
+$("#installBtn").onclick=async()=>{if(!deferred)return;deferred.prompt();const r=await deferred.userChoice;if(r.outcome==="accepted")markInstalled();deferred=null};
 if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
 const pullBtn=$("#pullBtn");
 if(pullBtn)pullBtn.onclick=()=>{if(confirm("Timpa data di HP ini dengan data terakhir dari Cloud?"))loadFromCloud()};
