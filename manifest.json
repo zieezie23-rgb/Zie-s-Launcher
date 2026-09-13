@@ -9,6 +9,13 @@
   "background_color": "#000000",
   "theme_color": "#000000",
   "orientation": "portrait-primary",
+  "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://zieezie23-rgb.github.io/Zie-s-Launcher/manifest.json"
+    }
+  ],
   "icons": [
     {
       "src": "assets/icon.png?v=2",
