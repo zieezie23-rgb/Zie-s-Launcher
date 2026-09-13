@@ -71,7 +71,7 @@ function render(){
 }
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function iconFromUrl(url){
- try{const origin=new URL(url).origin;return `https://www.google.com/s2/favicons?sz=128&domain=${encodeURIComponent(origin)}`}
+ try{new URL(url);return `https://www.google.com/s2/favicons?sz=128&domain_url=${encodeURIComponent(url)}`}
  catch{return ""}
 }
 function openForm(x=null){
