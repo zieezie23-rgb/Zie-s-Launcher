@@ -3,6 +3,7 @@ const BACKUP_URL="https://script.google.com/macros/s/AKfycbx0bQ2L2YYaflVztXf6BSR
 const seed=[
  {id:crypto.randomUUID(),name:"ZIE Project",url:"https://example.com",cat:"Tools",icon:"",favorite:true}
 ];
+const hasLocalData=localStorage.getItem(KEY)!==null;
 let apps=JSON.parse(localStorage.getItem(KEY)||"null")||seed;
 const $=s=>document.querySelector(s);
 const empty=$("#empty"), tpl=$("#cardTpl"), dialog=$("#appDialog"), form=$("#appForm");
@@ -10,6 +11,34 @@ const empty=$("#empty"), tpl=$("#cardTpl"), dialog=$("#appDialog"), form=$("#app
 function backupToCloud(){
  if(!BACKUP_URL||BACKUP_URL.startsWith("GANTI_")) return;
  fetch(BACKUP_URL,{method:"POST",mode:"no-cors",body:JSON.stringify({apps})}).catch(()=>{});
+}
+async function loadFromCloud(silent){
+ if(!BACKUP_URL||BACKUP_URL.startsWith("GANTI_")) return false;
+ const btn=$("#pullBtn"); if(btn)btn.disabled=true;
+ try{
+  const res=await fetch(BACKUP_URL);
+  const data=await res.json();
+  if(data.status==="ok"&&Array.isArray(data.apps)){
+   apps=data.apps.map(x=>({
+    id:crypto.randomUUID(),
+    name:x.name||"",
+    url:x.url||"",
+    cat:x.cat||"Lainnya",
+    icon:iconFromUrl(x.url||""),
+    favorite:!!x.favorite
+   }));
+   localStorage.setItem(KEY,JSON.stringify(apps));
+   render();
+   return true;
+  }
+  if(!silent)alert("Gagal tarik data: "+(data.message||"format tidak dikenali"));
+  return false;
+ }catch(err){
+  if(!silent)alert("Gagal tarik data dari cloud: "+err.message);
+  return false;
+ }finally{
+  if(btn)btn.disabled=false;
+ }
 }
 function save(){localStorage.setItem(KEY,JSON.stringify(apps));render();backupToCloud()}
 function buildCard(x){
@@ -70,4 +99,7 @@ window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();if(isStanda
 window.addEventListener("appinstalled",()=>{deferred=null;$("#installBtn").hidden=true});
 $("#installBtn").onclick=async()=>{if(!deferred)return;deferred.prompt();const r=await deferred.userChoice;if(r.outcome==="accepted")$("#installBtn").hidden=true;deferred=null};
 if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+const pullBtn=$("#pullBtn");
+if(pullBtn)pullBtn.onclick=()=>{if(confirm("Timpa data di HP ini dengan data terakhir dari Cloud?"))loadFromCloud()};
 render();
+if(!hasLocalData) loadFromCloud(true);
