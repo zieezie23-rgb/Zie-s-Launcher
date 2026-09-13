@@ -26,13 +26,17 @@ function render(){
  empty.hidden=list.length>0;
 }
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function iconFromUrl(url){
+ try{const origin=new URL(url).origin;return `https://www.google.com/s2/favicons?sz=128&domain=${encodeURIComponent(origin)}`}
+ catch{return ""}
+}
 function openForm(x=null){
  $("#dialogTitle").textContent=x?"Edit aplikasi":"Tambah aplikasi"; $("#appId").value=x?.id||"";
- $("#name").value=x?.name||"";$("#url").value=x?.url||"";$("#cat").value=x?.cat||"";$("#icon").value=x?.icon||"";$("#favorite").checked=!!x?.favorite;$("#deleteBtn").hidden=!x;
+ $("#name").value=x?.name||"";$("#url").value=x?.url||"";$("#cat").value=x?.cat||"";$("#favorite").checked=!!x?.favorite;$("#deleteBtn").hidden=!x;
  dialog.showModal(); $("#name").focus()
 }
 $("#addBtn").onclick=()=>openForm(); $("#search").oninput=render; $("#category").onchange=render;
-form.onsubmit=e=>{e.preventDefault();const data={id:$("#appId").value||crypto.randomUUID(),name:$("#name").value.trim(),url:$("#url").value.trim(),cat:$("#cat").value.trim()||"Lainnya",icon:$("#icon").value.trim(),favorite:$("#favorite").checked};
+form.onsubmit=e=>{e.preventDefault();const url=$("#url").value.trim();const data={id:$("#appId").value||crypto.randomUUID(),name:$("#name").value.trim(),url,cat:$("#cat").value.trim()||"Lainnya",icon:iconFromUrl(url),favorite:$("#favorite").checked};
  const i=apps.findIndex(x=>x.id===data.id); if(i<0)apps.push(data);else apps[i]=data; save();dialog.close()};
 $("#deleteBtn").onclick=()=>{const id=$("#appId").value;if(confirm("Hapus aplikasi ini?")){apps=apps.filter(x=>x.id!==id);save();dialog.close()}};
 let deferred;
