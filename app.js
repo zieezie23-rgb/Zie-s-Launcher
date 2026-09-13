@@ -4,7 +4,7 @@ const seed=[
 ];
 let apps=JSON.parse(localStorage.getItem(KEY)||"null")||seed;
 const $=s=>document.querySelector(s);
-const grid=$("#grid"), empty=$("#empty"), tpl=$("#cardTpl"), dialog=$("#appDialog"), form=$("#appForm");
+const empty=$("#empty"), tpl=$("#cardTpl"), dialog=$("#appDialog"), form=$("#appForm");
 
 function save(){localStorage.setItem(KEY,JSON.stringify(apps));render()}
 function buildCard(x){
@@ -15,9 +15,7 @@ function buildCard(x){
  fav.onclick=()=>{x.favorite=!x.favorite;save()}; el.querySelector(".edit").onclick=()=>openForm(x);
  return card;
 }
-function renderByCategory(){
- const q=$("#search").value.toLowerCase().trim();
- const list=apps.filter(x=>!q||(x.name+" "+x.url+" "+x.cat).toLowerCase().includes(q));
+function renderByCategory(list){
  const groups={};
  list.forEach(x=>{const c=x.cat||"Lainnya";(groups[c]=groups[c]||[]).push(x)});
  const cats=Object.keys(groups).sort();
@@ -33,12 +31,9 @@ function renderByCategory(){
 }
 function render(){
  const q=$("#search").value.toLowerCase().trim();
- const list=apps.filter(x=>!q||(x.name+" "+x.url+" "+x.cat).toLowerCase().includes(q))
-   .sort((a,b)=>Number(b.favorite)-Number(a.favorite)||a.name.localeCompare(b.name));
- grid.innerHTML="";
- list.forEach(x=>grid.append(buildCard(x)));
+ const list=apps.filter(x=>!q||(x.name+" "+x.url+" "+x.cat).toLowerCase().includes(q));
  empty.hidden=list.length>0;
- renderByCategory();
+ renderByCategory(list);
 }
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function iconFromUrl(url){
