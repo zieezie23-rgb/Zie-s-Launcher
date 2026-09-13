@@ -64,7 +64,10 @@ $("#exportBtn").onclick=()=>{
  XLSX.writeFile(wb,`zie-project-apps-${tgl}.xlsx`);
 };
 let deferred;
-window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferred=e;$("#installBtn").hidden=false});
-$("#installBtn").onclick=async()=>{if(!deferred)return;deferred.prompt();deferred=null;$("#installBtn").hidden=true};
+const isStandalone=()=>window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+if(isStandalone())$("#installBtn").hidden=true;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();if(isStandalone())return;deferred=e;$("#installBtn").hidden=false});
+window.addEventListener("appinstalled",()=>{deferred=null;$("#installBtn").hidden=true});
+$("#installBtn").onclick=async()=>{if(!deferred)return;deferred.prompt();const r=await deferred.userChoice;if(r.outcome==="accepted")$("#installBtn").hidden=true;deferred=null};
 if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
 render();
