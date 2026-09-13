@@ -71,8 +71,11 @@ function render(){
 }
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function iconFromUrl(url){
- try{new URL(url);return `https://www.google.com/s2/favicons?sz=128&domain_url=${encodeURIComponent(url)}`}
- catch{return ""}
+ try{
+  const u=new URL(url);
+  const base=u.href.endsWith("/")?u.href:u.href+"/";
+  return base+"assets/icon.png";
+ }catch{return ""}
 }
 function openForm(x=null){
  $("#dialogTitle").textContent=x?"Edit aplikasi":"Tambah aplikasi"; $("#appId").value=x?.id||"";
