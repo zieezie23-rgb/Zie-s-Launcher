@@ -103,6 +103,14 @@ const isStandalone=()=>window.matchMedia("(display-mode: standalone)").matches||
 const isInstalled=()=>isStandalone()||localStorage.getItem(INSTALL_KEY)==="1";
 function markInstalled(){localStorage.setItem(INSTALL_KEY,"1");$("#installBtn").hidden=true}
 if(isInstalled())$("#installBtn").hidden=true;
+async function checkRelatedApps(){
+ if(!("getInstalledRelatedApps" in navigator))return;
+ try{
+  const related=await navigator.getInstalledRelatedApps();
+  if(related && related.length>0) markInstalled();
+ }catch{}
+}
+checkRelatedApps();
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();if(isInstalled())return;deferred=e;$("#installBtn").hidden=false});
 window.addEventListener("appinstalled",()=>{deferred=null;markInstalled()});
 $("#installBtn").onclick=async()=>{if(!deferred)return;deferred.prompt();const r=await deferred.userChoice;if(r.outcome==="accepted")markInstalled();deferred=null};
