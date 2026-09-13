@@ -25,12 +25,10 @@
         <p class="eyebrow">MY APPLICATIONS</p>
         <h1>Semua PWA,<br><em>satu tempat.</em></h1>
       </div>
-      <button id="addBtn" class="add-btn">＋ Tambah</button>
-    </section>
-
-    <section class="toolbar">
-      <input id="search" type="search" placeholder="Cari aplikasi..." autocomplete="off">
-      <select id="category"><option value="all">Semua kategori</option></select>
+      <div class="hero-actions">
+        <button id="addBtn" class="add-btn">＋ Tambah</button>
+        <input id="search" type="search" placeholder="Cari aplikasi..." autocomplete="off">
+      </div>
     </section>
 
     <section id="grid" class="grid" aria-live="polite"></section>
@@ -39,6 +37,8 @@
       <h2>Belum ada aplikasi</h2>
       <p>Tambahkan URL PWA pertamamu.</p>
     </div>
+
+    <section id="catSections" class="cat-sections"></section>
   </main>
 
   <dialog id="appDialog">
@@ -62,9 +62,8 @@
   <template id="cardTpl">
     <article class="card">
       <button class="fav" title="Favorite">☆</button>
-      <div class="app-icon"></div>
+      <a class="app-icon" target="_blank" rel="noopener"></a>
       <div class="card-body"><h3></h3><p></p></div>
-      <a class="open" target="_blank" rel="noopener">Buka ↗</a>
       <button class="edit" title="Edit">•••</button>
     </article>
   </template>
