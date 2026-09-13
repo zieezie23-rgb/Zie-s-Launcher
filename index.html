@@ -16,19 +16,20 @@
       <div class="logo">ZIE</div>
       <div><strong>project</strong><span>PWA LAUNCHER</span></div>
     </div>
-    <button id="installBtn" class="icon-btn" hidden>Install</button>
+    <div class="topbar-actions">
+      <button id="installBtn" class="icon-btn" hidden>Install</button>
+      <button id="exportBtn" class="search-toggle" title="Export ke Excel" aria-label="Export ke Excel">⬇</button>
+      <button id="addBtn" class="add-btn" title="Tambah aplikasi" aria-label="Tambah aplikasi">＋</button>
+      <button id="searchToggle" class="search-toggle" title="Cari aplikasi" aria-label="Cari aplikasi">🔍</button>
+      <input id="search" type="search" placeholder="Cari aplikasi..." autocomplete="off">
+    </div>
   </header>
 
   <main>
     <section class="hero">
       <div>
         <p class="eyebrow">MY APPLICATIONS</p>
-        <h1>Semua PWA,<br><em>satu tempat.</em></h1>
-      </div>
-      <div class="hero-actions">
-        <button id="addBtn" class="add-btn"><span class="icon">＋</span><span class="label">Tambah</span></button>
-        <button id="searchToggle" class="search-toggle" title="Cari aplikasi" aria-label="Cari aplikasi">🔍</button>
-        <input id="search" type="search" placeholder="Cari aplikasi..." autocomplete="off">
+        <h1>Semua PWA, <em>satu tempat.</em></h1>
       </div>
     </section>
 
@@ -68,6 +69,7 @@
     </article>
   </template>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

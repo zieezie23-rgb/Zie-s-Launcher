@@ -1,4 +1,5 @@
 const KEY="zie-project-apps-v1";
+const BACKUP_URL="https://script.google.com/macros/s/AKfycbx0bQ2L2YYaflVztXf6BSRoQDQPsNLp6m_bHYaDg5bnwiFyOlCfnIusoBocfzYmVpvvYg/exec";
 const seed=[
  {id:crypto.randomUUID(),name:"ZIE Project",url:"https://example.com",cat:"Tools",icon:"",favorite:true}
 ];
@@ -6,7 +7,11 @@ let apps=JSON.parse(localStorage.getItem(KEY)||"null")||seed;
 const $=s=>document.querySelector(s);
 const empty=$("#empty"), tpl=$("#cardTpl"), dialog=$("#appDialog"), form=$("#appForm");
 
-function save(){localStorage.setItem(KEY,JSON.stringify(apps));render()}
+function backupToCloud(){
+ if(!BACKUP_URL||BACKUP_URL.startsWith("GANTI_")) return;
+ fetch(BACKUP_URL,{method:"POST",mode:"no-cors",body:JSON.stringify({apps})}).catch(()=>{});
+}
+function save(){localStorage.setItem(KEY,JSON.stringify(apps));render();backupToCloud()}
 function buildCard(x){
  const el=tpl.content.cloneNode(true), card=el.querySelector(".card"), icon=el.querySelector(".app-icon");
  if(x.icon){const im=new Image();im.src=x.icon;im.onerror=()=>icon.textContent=x.name[0].toUpperCase();icon.append(im)}else icon.textContent=x.name[0].toUpperCase();
@@ -50,6 +55,14 @@ $("#searchToggle").onclick=()=>{const s=$("#search");s.classList.toggle("show");
 form.onsubmit=e=>{e.preventDefault();const url=$("#url").value.trim();const data={id:$("#appId").value||crypto.randomUUID(),name:$("#name").value.trim(),url,cat:$("#cat").value.trim()||"Lainnya",icon:iconFromUrl(url),favorite:$("#favorite").checked};
  const i=apps.findIndex(x=>x.id===data.id); if(i<0)apps.push(data);else apps[i]=data; save();dialog.close()};
 $("#deleteBtn").onclick=()=>{const id=$("#appId").value;if(confirm("Hapus aplikasi ini?")){apps=apps.filter(x=>x.id!==id);save();dialog.close()}};
+$("#exportBtn").onclick=()=>{
+ const rows=apps.map(x=>({Nama:x.name,URL:x.url,Kategori:x.cat||"Lainnya",Favorit:x.favorite?"Ya":"Tidak"}));
+ const ws=XLSX.utils.json_to_sheet(rows);
+ const wb=XLSX.utils.book_new();
+ XLSX.utils.book_append_sheet(wb,ws,"Aplikasi");
+ const tgl=new Date().toISOString().slice(0,10);
+ XLSX.writeFile(wb,`zie-project-apps-${tgl}.xlsx`);
+};
 let deferred;
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferred=e;$("#installBtn").hidden=false});
 $("#installBtn").onclick=async()=>{if(!deferred)return;deferred.prompt();deferred=null;$("#installBtn").hidden=true};
